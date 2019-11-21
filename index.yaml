@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  my-app:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-03-30T13:43:01.301859468Z
+    description: A Helm chart for Kubernetes
+    digest: 29089aabaa8aa08a03215098b1982ad38f6cd9de1c9b25ff842003a53cad881d
+    name: my-app
+    urls:
+    - https://fantastic-charts.storage.googleapis.com/my-app-0.1.0.tgz
+    version: 0.1.0
+generated: 2018-03-30T13:43:01.301439041Z
