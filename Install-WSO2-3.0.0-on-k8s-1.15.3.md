@@ -715,6 +715,7 @@ EOF
 ## 3. Thực hiện trên MYSQL 
 
 **Import database vào MYSQL**
+
 Clone repository trên Github:
 ```sh
 git clone https://github.com/wso2/docker-apim.git
