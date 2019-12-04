@@ -726,6 +726,12 @@ mysql -u username -p  < mysql_analytics.sql
 mysql -u username -p  < mysql_apim.sql
 mysql -u username -p  < mysql_shared.sql
 ```
+Set `max_connections` trên mysql:
+```sh
+mysql -u username -p
+
+set global max_connections = 2000;
+```
 ## 4. Thực hiện deploy các `service`, `deployment`, `hpa`, `pv`, `pvc` vừa tạo như sau:
 Tạo Namespace `wso2`
 ```sh
