@@ -11,11 +11,12 @@
 |NFS|10.1.38.129|
 
 ## 1. Thực hiện trên NFS
-**Tạo thư mục chia sẻ trên NFS**
+**Tạo thư mục chia sẻ và phân quyền trên NFS**
 ```sh
 mkdir -p /data/wso2/worker
 mkdir -p /data/wso2/dashboard
 mkdir -p /data/wso2/apim
+chown -R /data/wso2
 ```
 ## 2. Thực hiện trên Node Master
 Tạo 3 file cho 3 serice: `am-analytics-worker.yaml`, `api-manager`, `am-analytics-dashboard`.**
@@ -480,7 +481,7 @@ spec:
     role: am-analytics-worker
 EOF
 ```
-### 2.2 Tạo file `am-analytics-worker.yaml` với nội dung sau:
+### 2.3 Tạo file `am-analytics-dashboard.yaml` với nội dung sau:
 ```sh
 cat << EOF > am-analytics-dashboard.yaml
 apiVersion: v1
@@ -640,8 +641,9 @@ spec:
     role: am-analytics-dashboard
 EOF
 ```
+## 3. Thực hiện trên MYSQL 
 
-## 3. Thực hiện deploy các `service`, `deployment`, `hpa`, `pv`, `pvc` vừa tạo như sau:
+## 4. Thực hiện deploy các `service`, `deployment`, `hpa`, `pv`, `pvc` vừa tạo như sau:
 Tạo Namespace `wso2`
 ```sh
 kubectl create namespace wso2
