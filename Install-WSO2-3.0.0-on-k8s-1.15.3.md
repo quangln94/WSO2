@@ -714,6 +714,18 @@ EOF
 ```
 ## 3. Thực hiện trên MYSQL 
 
+**Import database vào MYSQL**
+Clone repository trên Github:
+```sh
+git clone https://github.com/wso2/docker-apim.git
+```
+```sh
+cd /root/docker-apim/docker-compose/apim-with-analytics/mysql/scripts
+
+mysql -u username -p  < mysql_analytics.sql
+mysql -u username -p  < mysql_apim.sql
+mysql -u username -p  < mysql_shared.sql
+```
 ## 4. Thực hiện deploy các `service`, `deployment`, `hpa`, `pv`, `pvc` vừa tạo như sau:
 Tạo Namespace `wso2`
 ```sh
