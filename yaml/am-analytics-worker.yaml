@@ -1,0 +1,121 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: am-analytics-worker-nfs-pv-config
+  namespace: wso2
+  labels:
+    storage: am-analytics-worker-nfs-pv-config
+spec:
+  storageClassName: nfs-volume
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    server: 10.1.38.129
+    path: "/data/wso2/worker"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: am-analytics-worker-nfs-pvc-config
+  namespace: wso2
+spec:
+  storageClassName: nfs-volume
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  selector:
+    matchLabels:
+      storage: am-analytics-worker-nfs-pv-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: am-analytics-worker-deployment
+  namespace: wso2
+  labels:
+    app: am-analytics-worker
+    role: am-analytics-worker
+spec:
+  selector:
+    matchLabels:
+      app: am-analytics-worker
+      role: am-analytics-worker
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+  minReadySeconds: 120
+  template:
+    metadata:
+      labels:
+        app: am-analytics-worker
+        role: am-analytics-worker
+    spec:
+      containers:
+      - name: am-analytics-worker
+        image: wso2/wso2am-analytics-worker:3.0.0
+        ports:
+        - containerPort: 9091
+          name: port1
+        - containerPort: 9444
+          name: port2
+        resources:
+          requests:
+            cpu: "1000m"
+            memory: "4096Mi"
+          limits: 
+            cpu: "1000m"
+            memory: "4096Mi"
+        volumeMounts:
+        - mountPath: /home/wso2carbon/wso2-config-volume
+          name: am-analytics-worker-config
+      volumes:
+      - name: am-analytics-worker-config
+        persistentVolumeClaim:
+          claimName: am-analytics-worker-nfs-pvc-config
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-am-analytics-worker
+  namespace: wso2
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: am-analytics-worker-deployment
+  minReplicas: 1
+  maxReplicas: 1
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 80
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: am-analytics-worker
+  namespace: wso2
+spec:
+  type: NodePort
+  ports:
+  - port: 9091
+    name: port1
+    nodePort: 31122
+  - port: 9444
+    name: port2
+    nodePort: 31123
+  selector:
+    app: am-analytics-worker
+    role: am-analytics-worker
