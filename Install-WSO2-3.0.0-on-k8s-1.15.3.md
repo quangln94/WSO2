@@ -33,7 +33,7 @@ co- r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-worker
 cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-dashboard/config /data/wso2/dashboard
 cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-dashboard/artifact /data/wso2/dashboard
 ```
-**Sửa file cấu hình của `apim` như sau: 
+**Sửa file cấu hình của `apim` như sau:**
 ```sh
 vim /data/wso2/apim/config/repository/conf/deployment.toml
 [server]
@@ -826,8 +826,10 @@ auth.configs:
 Trong đó lưu ý 1 số trường sau:
 - `10.1.38.147`: Thay toàn bộ IP này bằng IP của máy MYSQL
 
-**Sửa file cấu hình của `apim` như sau: 
+**Sửa file cấu hình của `worker` như sau: 
 ```sh
+vim /data/wso2/worker/conf/worker/deployment.yaml
+
 ################################################################################
 #   Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved
 #
