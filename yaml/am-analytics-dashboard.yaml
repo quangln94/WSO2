@@ -1,0 +1,155 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: am-analytics-dashboard-nfs-pv-config
+  namespace: wso2
+  labels:
+    storage: am-analytics-dashboard-nfs-pv-config
+spec:
+  storageClassName: nfs-volume
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    server: 10.1.38.129
+    path: "/data/wso2/dashboard/config"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: am-analytics-dashboard-nfs-pv-artifact
+  namespace: wso2
+  labels:
+    storage: am-analytics-dashboard-nfs-pv-artifact
+spec:
+  storageClassName: nfs-volume
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    server: 10.1.38.129
+    path: "/data/wso2/dashboard/artifact"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: am-analytics-dashboard-nfs-pvc-config
+  namespace: wso2
+spec:
+  storageClassName: nfs-volume
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  selector:
+    matchLabels:
+      storage: am-analytics-dashboard-nfs-pv-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: am-analytics-dashboard-nfs-pvc-artifact
+  namespace: wso2
+spec:
+  storageClassName: nfs-volume
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  selector:
+    matchLabels:
+      storage: am-analytics-dashboard-nfs-pv-artifact
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: am-analytics-dashboard-deployment
+  namespace: wso2
+  labels:
+    app: am-analytics-dashboard
+    role: am-analytics-dashboard
+spec:
+  selector:
+    matchLabels:
+      app: am-analytics-dashboard
+      role: am-analytics-dashboard
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+  minReadySeconds: 120
+  template:
+    metadata:
+      labels:
+        app: am-analytics-dashboard
+        role: am-analytics-dashboard
+    spec:
+      containers:
+      - name: am-analytics-dashboard
+        image: wso2/wso2am-analytics-dashboard:3.0.0
+        ports:
+        - containerPort: 9643
+          name: port1
+        resources:
+          requests:
+            cpu: "1000m"
+            memory: "4096Mi"
+          limits: 
+            cpu: "1000m"
+            memory: "4096Mi"
+        volumeMounts:
+        - mountPath: /home/wso2carbon/wso2-config-volume
+          name: am-analytics-dashboard-config
+        - mountPath: /home/wso2carbon/wso2-artifact-volume
+          name: am-analytics-dashboard-artifact
+      volumes:
+      - name: am-analytics-dashboard-config
+        persistentVolumeClaim:
+          claimName: am-analytics-dashboard-nfs-pvc-config
+      - name: am-analytics-dashboard-artifact
+        persistentVolumeClaim:
+          claimName: am-analytics-dashboard-nfs-pvc-artifact
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-am-analytics-dashboard
+  namespace: wso2
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: am-analytics-dashboard-deployment
+  minReplicas: 1
+  maxReplicas: 1
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 80
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: am-analytics-dashboard
+  namespace: wso2
+spec:
+  type: NodePort
+  ports:
+  - port: 9643
+    name: port1
+    nodePort: 31128
+  selector:
+    app: am-analytics-dashboard
+    role: am-analytics-dashboard
