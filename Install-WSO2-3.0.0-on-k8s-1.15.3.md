@@ -63,7 +63,7 @@ Trong đó cần lưu ý các trường sau:
 - `10.1.38.128`: Thay đổi toàn bộ IP này bằng IP của máy mình
 - `10.1.38.147`: Thay đổi toàn bộ IP này bằng IP của máy MYSQL
 
-**Sửa file cấu hình của `worker` như sau: 
+**Sửa file cấu hình của `worker` như sau:**
 ```sh
 vim /data/wso2/worker/conf/worker/deployment.yaml
 --------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ vim /data/wso2/worker/conf/worker/deployment.yaml
 Trong đó lưu ý 1 số trường sau:
 - `10.1.38.147`: Thay toàn bộ IP này bằng IP của máy MYSQL
 
-**Sửa file cấu hình của `dashbroad` như sau: 
+**Sửa file cấu hình của `dashbroad` như sau: **
 ```sh
 vim /data/wso2/worker/conf/worker/deployment.yaml
 ------------------------------------------------------------------------------------
