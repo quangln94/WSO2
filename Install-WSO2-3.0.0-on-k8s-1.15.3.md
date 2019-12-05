@@ -41,6 +41,7 @@ vim /data/wso2/apim/config/repository/conf/deployment.toml
 [server]
 hostname = "10.1.38.128"
 node_ip = "10.1.38.128"
+offset=22057
 -----------------------
 [database.apim_db]
 type = "mysql"
@@ -64,6 +65,7 @@ revoke_endpoint = "https://10.1.38.128:${https.nio.port}/revoke"
 Trong đó cần lưu ý các trường sau:
 - `10.1.38.128`: Thay đổi toàn bộ IP này bằng IP của máy mình
 - `10.1.38.147`: Thay đổi toàn bộ IP này bằng IP của máy MYSQL
+- `offset=22057`: Giá trị này thay đổi the Port mà bạn expose. Ở đây expose `port 9443` của `api-manager` ra `port 31500` nên giá trị `offset=31500-9443=22057`
 
 **Sửa file cấu hình của `worker` như sau:**
 
@@ -204,13 +206,13 @@ spec:
       - name: api-manager
         image: wso2/wso2am:3.0.0
         ports:
-        - containerPort: 9763
-          name: port1
-        - containerPort: 9443
-          name: port2
         - containerPort: 8280
+          name: port1
+        - containerPort: 30300                  # Port mặc định + giá trị offset
+          name: port2
+        - containerPort: 9763
           name: port3
-        - containerPort: 8243
+        - containerPort: 31500                  # Port mặc định + giá trị offset
           name: port4
         resources:
           requests:
@@ -232,6 +234,9 @@ spec:
         persistentVolumeClaim:
           claimName: api-manager-nfs-pvc-artifact
 ```
+Trong đó lưu ý 1 số trường sau:
+- `containerPort: 30300`: Giá trị mặc định là 8243
+- `containerPort: 31500`: Giá trị mặc định là 9443
 
 **Tạo file Service với nội dung sau:**
 
@@ -244,18 +249,18 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 9763
+  - port: 8280
     name: port1
     nodePort: 31124
-  - port: 9443
+  - port: 30300
     name: port2
-    nodePort: 31125
-  - port: 8280
+    nodePort: 30300
+  - port: 9763
     name: port3
     nodePort: 31126
-  - port: 8243
+  - port: 31500
     name: port4
-    nodePort: 31127
+    nodePort: 31500
   selector:
     app: api-manager
     role: api-manager
@@ -360,13 +365,13 @@ spec:
       - name: api-manager
         image: wso2/wso2am:3.0.0
         ports:
-        - containerPort: 9763
-          name: port1
-        - containerPort: 9443
-          name: port2
         - containerPort: 8280
+          name: port1
+        - containerPort: 30300
+          name: port2
+        - containerPort: 9763
           name: port3
-        - containerPort: 8243
+        - containerPort: 31500
           name: port4
         resources:
           requests:
@@ -418,18 +423,18 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 9763
+  - port: 8280
     name: port1
     nodePort: 31124
-  - port: 9443
+  - port: 30300
     name: port2
-    nodePort: 31125
-  - port: 8280
+    nodePort: 30300
+  - port: 9763
     name: port3
     nodePort: 31126
-  - port: 8243
+  - port: 31500
     name: port4
-    nodePort: 31127
+    nodePort: 31500
   selector:
     app: api-manager
     role: api-manager
@@ -501,10 +506,20 @@ spec:
       - name: am-analytics-worker
         image: wso2/wso2am-analytics-worker:3.0.0
         ports:
-        - containerPort: 9091
+        - containerPort: 9764
           name: port1
         - containerPort: 9444
           name: port2
+        - containerPort: 7612
+          name: port3
+        - containerPort: 7712
+          name: port4
+        - containerPort: 9091
+          name: port5
+        - containerPort: 7071
+          name: port6
+        - containerPort: 7444
+          name: port7
         resources:
           requests:
             cpu: "1000m"
@@ -550,12 +565,27 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 9091
+  - port: 9764
     name: port1
     nodePort: 31122
   - port: 9444
     name: port2
     nodePort: 31123
+  - port: 7612
+    name: port3
+    nodePort: 31121
+  - port: 7712
+    name: port4
+    nodePort: 31120
+  - port: 9091
+    name: port5
+    nodePort: 31119
+  - port: 7071
+    name: port6
+    nodePort: 31118
+  - port: 7444
+    name: port7
+    nodePort: 31117
   selector:
     app: am-analytics-worker
     role: am-analytics-worker
@@ -661,8 +691,18 @@ spec:
       - name: am-analytics-dashboard
         image: wso2/wso2am-analytics-dashboard:3.0.0
         ports:
-        - containerPort: 9643
+        - containerPort: 9713
           name: port1
+        - containerPort: 9643
+          name: port2
+        - containerPort: 9613
+          name: port3
+        - containerPort: 7713
+          name: port4
+        - containerPort: 9091
+          name: port5
+        - containerPort: 7613
+          name: port6
         resources:
           requests:
             cpu: "1000m"
@@ -713,9 +753,24 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 9643
+  - port: 9713
     name: port1
     nodePort: 31128
+  - port: 9643
+    name: port2
+    nodePort: 31129
+  - port: 9613
+    name: port3
+    nodePort: 31130
+  - port: 7713
+    name: port4
+    nodePort: 31131
+  - port: 9091
+    name: port5
+    nodePort: 31132
+  - port: 7613
+    name: port6
+    nodePort: 31133
   selector:
     app: am-analytics-dashboard
     role: am-analytics-dashboard
