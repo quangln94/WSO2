@@ -34,6 +34,7 @@ cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-dashbo
 cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-dashboard/artifact /data/wso2/dashboard
 ```
 **Sửa file cấu hình của `apim` như sau:**
+
 ```sh
 vim /data/wso2/apim/config/repository/conf/deployment.toml
 [server]
@@ -64,6 +65,7 @@ Trong đó cần lưu ý các trường sau:
 - `10.1.38.147`: Thay đổi toàn bộ IP này bằng IP của máy MYSQL
 
 **Sửa file cấu hình của `worker` như sau:**
+
 ```sh
 vim /data/wso2/worker/conf/worker/deployment.yaml
 --------------------------------------------------------------------------------
@@ -77,6 +79,7 @@ Trong đó lưu ý 1 số trường sau:
 - `10.1.38.147`: Thay toàn bộ IP này bằng IP của máy MYSQL
 
 **Sửa file cấu hình của `dashbroad` như sau: **
+
 ```sh
 vim /data/wso2/worker/conf/worker/deployment.yaml
 ------------------------------------------------------------------------------------
@@ -93,6 +96,7 @@ Trong đó lưu ý 1 số trường sau:
 Tạo 3 file cho 3 serice: `am-analytics-worker.yaml`, `api-manager`, `am-analytics-dashboard`.**
 ### 2.1 Tạo file `api-manager.yaml` với nội dung gồm các phần như sau:
 **Tạo 2 `PersistentVolume` và 2 `PersistentVolumeClaim` tương ứng như sau:**
+
 ```sh
 apiVersion: v1
 kind: PersistentVolume
