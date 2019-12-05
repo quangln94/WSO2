@@ -33,6 +33,7 @@ co- r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-worker
 cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-dashboard/config /data/wso2/dashboard
 cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-dashboard/artifact /data/wso2/dashboard
 ```
+
 **Sửa file cấu hình của `apim` như sau:**
 
 ```sh
@@ -95,6 +96,7 @@ Trong đó lưu ý 1 số trường sau:
 ## 2. Thực hiện trên Node Master
 Tạo 3 file cho 3 serice: `am-analytics-worker.yaml`, `api-manager`, `am-analytics-dashboard`.**
 ### 2.1 Tạo file `api-manager.yaml` với nội dung gồm các phần như sau:
+
 **Tạo 2 `PersistentVolume` và 2 `PersistentVolumeClaim` tương ứng như sau:**
 
 ```sh
@@ -171,6 +173,7 @@ Cần lưu ý 1 số trường như sau:
 - Các trường khác có thể giữ nguyên hoặc thay đổi nhưng cần chú ý label cho khớp.
 
 **Tạo Deployment với nội dung như sau:**
+
 ```sh
 apiVersion: apps/v1
 kind: Deployment
@@ -229,7 +232,9 @@ spec:
         persistentVolumeClaim:
           claimName: api-manager-nfs-pvc-artifact
 ```
+
 **Tạo file Service với nội dung sau:**
+
 ```sh
 apiVersion: v1
 kind: Service
