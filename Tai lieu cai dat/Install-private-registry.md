@@ -1,14 +1,19 @@
-- Tạo ssl certificate cho nginx. Chúng ta sẽ sử dụng nginx để làm proxy webserver cho registry. Do registry sử dụng port khác với 80/443 để cung cấp dịch vụ.
+# Install Private Registry
+
+**- Tạo ssl certificate cho nginx. Chúng ta sẽ sử dụng nginx để làm proxy webserver cho registry. Do registry sử dụng port khác với 80/443 để cung cấp dịch vụ.**
+```sh
 mkdir -p /data/nginx/certs
 mkdir -p /data/nexus
 chown -R 200:200 /data/nexus
 cd /data/nginx/certs
+```
+***Chú ý: Nếu ko sử dụng lệnh chown thì sẽ bị lỗi container của nexus do không có phân quyền***
 
-- Nếu ko sử dụng lệnh chown thì sẽ bị lỗi container của nexus do không có phân quyền
-
-- Tạo CA
+**- Tạo CA**
+```sh
 openssl req -newkey rsa:4096 -nodes -sha256 -keyout ca.key -x509 -days 3650 -out ca.crt
-
+```
+```sh
 Country Name (2 letter code) [AU]:VN
 State or Province Name (full name) [Some-State]:Ha Noi
 Locality Name (eg, city) []:HN
@@ -16,10 +21,13 @@ Organization Name (eg, company) [Internet Widgits Pty Ltd]:VNPT-IT
 Organizational Unit Name (eg, section) []:TT SI
 Common Name (e.g. server FQDN or YOUR name) []:idp.registry.vnpt.vn
 Email Address []:nguyentrongtan@vnpt.vn
+```
+**- Tạo Certificate Signing Request**
 
-- Tạo Certificate Signing Request
+```sh
 openssl req -newkey rsa:4096 -nodes -sha256 -keyout idp.registry.vnpt.vn.key -out idp.registry.vnpt.vn.csr
-
+```
+```sh
 Country Name (2 letter code) [AU]:VN
 State or Province Name (full name) [Some-State]:Ha Noi
 Locality Name (eg, city) []:HN
@@ -32,11 +40,13 @@ Please enter the following 'extra' attributes
 to be sent with your certificate request
 A challenge password []:123456
 An optional company name []:VNPT-IT
-
-- Tạo certificate cho registry host
+```
+**- Tạo certificate cho registry host**
+```sh
 openssl x509 -req -days 3650 -in idp.registry.vnpt.vn.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out idp.registry.vnpt.vn.crt
-
-- Tạo file /data/nginx/nginx.conf để sử dụng cho container nginx với nội dung sau
+```
+**- Tạo file /data/nginx/nginx.conf để sử dụng cho container nginx với nội dung sau**
+```sh
 cd
 cat << EOF > /data/nginx/nginx.conf
 user  nginx;
@@ -94,20 +104,24 @@ user  nginx;
     }
 }
 EOF
+```
+## 2.Cài đặt docker, docker-compose để chạy nginx và nexus**
 
-- Cài đặt docker, docker-compose để chạy nginx và nexus
-- Thực hiện cài docker-ce:
+**- Thực hiện cài docker-ce:**
+```sh
 apt install apt-transport-https ca-certificates curl software-properties-common -y
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
 apt update
 apt install docker-ce -y
-
-- Thực hiện cài đặt docker-compose bằng các lệnh: 
+```
+**- Thực hiện cài đặt docker-compose bằng các lệnh:**
+```sh
 curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
-
-- Tạo file docker-compose.yaml với nội dung sau:
+```
+**- Tạo file docker-compose.yaml với nội dung sau:**
+```sh
 cd && mkdir -p nexus3 && cd nexus3
 cat << EOF > docker-compose.yaml
 version: "2"
@@ -131,18 +145,18 @@ services:
     links:
     - nexus:nexus
 EOF
-
-- Tạo các container nginx và nexus bằng lệnh sau:
+```
+**- Tạo các container nginx và nexus bằng lệnh sau:**
+```sh
 docker-compose up -d
+```
+**- Truy cập vào đường dẫn sau để vào registry: `http://10.1.38.128:8081/`**
 
-- Truy cập vào đường dẫn sau để vào registry:
-http://10.1.38.128:8081/
+**- Sử dụng username là admin, mật khẩu là chuỗi ký tự trong file: `/data/nexus/admin.password`**
 
-- Sử dụng username là admin, mật khẩu là chuỗi ký tự trong file: /data/nexus/admin.password
+**- Sau khi đăng nhập lần đầu thì đổi mật khẩu**
 
-- Sau khi đăng nhập lần đầu thì đổi mật khẩu
-
-- Thực hiện tạo repository bằng cách vào icon bánh răng (cạnh ô search components) --> Repository (tab ở cột trái) --> repositories --> create repository --> docker (hosted)
+**- Thực hiện tạo repository bằng cách vào icon bánh răng (cạnh ô search components) --> Repository (tab ở cột trái) --> repositories --> create repository --> docker (hosted)**
 
 - Trong phần create cần:
 	+ đặt tên repository: private-repo
@@ -175,6 +189,7 @@ docker push idp.registry.vnpt.vn/image:v1
 - yêu cầu phải copy file ca.crt sang thư mục cert của host muốn up/down image.
 
 - Thực hiện tạo pod, lấy image từ repo của nexus bằng file deployment-test-registry.yaml sau:
+```sh
 cat << EOF > deployment-test-registry.yaml
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
@@ -202,7 +217,7 @@ spec:
       imagePullSecrets:
         - name: nexus-secret-registry
 EOF
-
+```
 - Chạy lệnh:
 kubectl apply -f deployment-test-registry.yaml
 
