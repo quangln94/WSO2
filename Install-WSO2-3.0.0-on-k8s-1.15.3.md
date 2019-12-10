@@ -39,7 +39,8 @@ cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-dashbo
 ```sh
 vim /data/wso2/apim/config/repository/conf/deployment.toml
 [server]
-hostname = "10.1.38.128"
+#hostname = "10.1.38.128"
+hostname = "api-manager"
 node_ip = "10.1.38.128"
 offset=22057
 -----------------------
