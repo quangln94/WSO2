@@ -105,7 +105,7 @@ user  nginx;
 }
 EOF
 ```
-## 2.Cài đặt docker, docker-compose để chạy nginx và nexus**
+## 2.Cài đặt docker, docker-compose để chạy nginx và nexus
 
 **Thực hiện cài docker-ce:**
 ```sh
@@ -150,34 +150,39 @@ EOF
 ```sh
 docker-compose up -d
 ```
-**Truy cập vào đường dẫn sau để vào registry: `http://10.1.38.128:8081/`**
+***Truy cập vào đường dẫn sau để vào registry: `http://10.1.38.128:8081/`***
 
-**Sử dụng username là admin, mật khẩu là chuỗi ký tự trong file: `/data/nexus/admin.password`**
+***Sử dụng username là admin, mật khẩu là chuỗi ký tự trong file: `/data/nexus/admin.password`***
 
-**Sau khi đăng nhập lần đầu thì đổi mật khẩu**
+***Sau khi đăng nhập lần đầu thì đổi mật khẩu***
 
-**Thực hiện tạo repository bằng cách vào icon bánh răng (cạnh ô search components) --> Repository (tab ở cột trái) --> repositories --> create repository --> docker (hosted)**
+Thực hiện tạo repository bằng cách vào icon bánh răng (cạnh ô search components) --> Repository (tab ở cột trái) --> repositories --> create repository --> docker (hosted)
 
 - Trong phần create cần:
 	+ đặt tên repository: private-repo
 	+ port http đặt là 8083
 	+ cho dấu tick vào Enable Docker v1 API
-	
-- Thực hiện test push và pull image từ k8s, tạo thư mục trên các máy chủ master, worker trong cụm
-mkdir -p /etc/docker/certs.d/idp.registry.vnpt.vn
 
+<img src=https://i.imgur.com/0xw6Xpr.png>
+
+- Thực hiện test push và pull image từ k8s, tạo thư mục trên các máy chủ master, worker trong cụm
+```sh
+mkdir -p /etc/docker/certs.d/idp.registry.vnpt.vn
+```
 - Copy file ca.crt từ node registry vào thư mục /etc/docker/certs.d/idp.registry.vnpt.vn trên tất cả các máy master và worker
+```sh
 scp /data/nginx/certs/ca.crt si@10.1.38.128:/tmp
 scp /data/nginx/certs/ca.crt si@192.168.167.74:/tmp
 scp /data/nginx/certs/ca.crt si@192.168.167.75:/tmp
-
+```
 - Trên các node master, worker thực hiện sao chép ca.crt vào trong docker
+```sh
 cp /tmp/ca.crt /etc/docker/certs.d/idp.registry.vnpt.vn/
-
-
+```
 - Thực hiện tạo secret để kết nối vào repository:
+```sh
 kubectl create secret docker-registry nexus-secret-registry --docker-server=idp.registry.vnpt.vn --docker-username=admin --docker-password=xxxxxxxxxx
-
+```
 - Check secret vừa tạo
 kubectl get secret
 
