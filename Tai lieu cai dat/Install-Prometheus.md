@@ -3,7 +3,7 @@
 ## Thực hiện cài Prometheus trên cụm kubernetes
 ***Sử dụng helm để cài đặt prometheus + grafana giám sát cho cụm kubernetes:***
 
-## 1.
+## 1.Cài đặt Helm
 
 **Thực hiện trên Node Master**
 ```sh
@@ -52,6 +52,8 @@ helm init --service-account tiller
 ```sh
 helm repo update
 ```
+## 2. Cài đặt Prometheus
+
 **Tạo một `storageclass` sử dụng `NFS` để lưu trữ dữ liệu cho Pod prometheus. Các dữ liệu này sẽ tồn tại bên ngoài container để đảm bảo dữ liệu ko bị mất.**
 
 ***Note: Yêu cầu thay đổi đúng tham số IP và thư mục lưu trữ dữ liệu. Tạo thư mục lưu trữ `/data/prometheus` trên `nfs` server***
