@@ -3,6 +3,20 @@
 
 Thực hiện trên 2 Node: 10.1.38.137, 10.1.38.138
 
+**Cài đặt HAProxy trên Ubuntu 16.04**
+```sh
+sudo apt-get -y install haproxy
+```
+Thêm dòng sau vào file `/etc/default/haproxy`
+```sh
+$ vim /etc/default/haproxy
+ENABLE=1
+```
+**Cài đặt Keepalived trên Ubuntu 16.04**
+```sh
+sudo apt-get install keepalived
+service keepalived start
+```
 **Cấu hình gắn IP lên carđ mạng:**
 ```sh
 vim /etc/sysctl.conf
