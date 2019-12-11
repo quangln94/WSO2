@@ -171,4 +171,4 @@ kubectl apply -f grafana-service.yml -n monitoring
 http://{grafana IP}:30303/
 http://10.1.38.129:30303/
 ```
-**Truy cập bằng user/pass: admin/pass@prometheus**
+**Truy cập bằng `user/pass`: `admin/pass@prometheus`**
