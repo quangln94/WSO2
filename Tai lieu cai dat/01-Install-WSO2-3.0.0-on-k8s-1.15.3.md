@@ -28,7 +28,7 @@ git clone https://github.com/wso2/docker-apim.git
 cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim/config /data/wso2/apim
 cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim/artifact /data/wso2/apim 
 
-co- r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-worker/config /data/wso2/worker
+cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-worker/config /data/wso2/worker
 
 cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-dashboard/config /data/wso2/dashboard
 cp -r /root/docker-apim/docker-compose/apim-with-analytics/apim-analytics-dashboard/artifact /data/wso2/dashboard
