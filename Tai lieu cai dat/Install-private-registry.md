@@ -1,7 +1,5 @@
 # Install Private Registry
 
-## Thực hiện trên Node Registry
-
 ## 1. Tạo `certificate`
 
 **Tạo ssl certificate cho nginx. Chúng ta sẽ sử dụng nginx để làm proxy webserver cho registry. Do registry sử dụng port khác với 80/443 để cung cấp dịch vụ.**
