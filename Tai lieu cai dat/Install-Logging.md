@@ -78,9 +78,10 @@ ln -s /etc/nginx/sites-available/idp.vnpt.vn /etc/nginx/sites-enabled/idp.vnpt.v
 nginx -t
 systemctl restart nginx
 ```
-**đăng nhập kibana: `http://10.1.38.139/status`
+**Đăng nhập kibana: `http://10.1.38.139/status`**
 
 **install Fluentd**
+
 Thực hiện trên master1. Đầu tiên ta tạo file khai báo
 ```sh
 cd
