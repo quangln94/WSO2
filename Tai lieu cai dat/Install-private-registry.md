@@ -169,31 +169,36 @@ Thực hiện tạo repository bằng cách vào icon bánh răng (cạnh ô sea
 ```sh
 mkdir -p /etc/docker/certs.d/idp.registry.vnpt.vn
 ```
-- Copy file ca.crt từ node registry vào thư mục /etc/docker/certs.d/idp.registry.vnpt.vn trên tất cả các máy master và worker
+**Copy file ca.crt từ node registry vào thư mục /etc/docker/certs.d/idp.registry.vnpt.vn trên tất cả các máy master và worker**
+
 ```sh
-scp /data/nginx/certs/ca.crt si@10.1.38.128:/tmp
-scp /data/nginx/certs/ca.crt si@192.168.167.74:/tmp
-scp /data/nginx/certs/ca.crt si@192.168.167.75:/tmp
+scp /data/nginx/certs/ca.crt vnpt@10.1.38.111:/tmp
+scp /data/nginx/certs/ca.crt vnpt@10.1.38.128:/tmp
+scp /data/nginx/certs/ca.crt vnpt@10.1.38.149:/tmp
+scp /data/nginx/certs/ca.crt vnpt@10.1.38.137:/tmp
+scp /data/nginx/certs/ca.crt vnpt@10.1.38.138:/tmp
 ```
-- Trên các node master, worker thực hiện sao chép ca.crt vào trong docker
+**Trên các node master, worker thực hiện sao chép `ca.crt` vào trong docker**
 ```sh
-cp /tmp/ca.crt /etc/docker/certs.d/idp.registry.vnpt.vn/
+$ cp /tmp/ca.crt /etc/docker/certs.d/idp.registry.vnpt.vn/
 ```
-- Thực hiện tạo secret để kết nối vào repository:
+**Thực hiện tạo secret để kết nối vào repository:**
 ```sh
-kubectl create secret docker-registry nexus-secret-registry --docker-server=idp.registry.vnpt.vn --docker-username=admin --docker-password=xxxxxxxxxx
+kubectl create secret docker-registry nexus-secret-registry --docker-server=idp.registry.vnpt.vn --docker-username=admin --docker-password=your@password
 ```
-- Check secret vừa tạo
+**Check secret vừa tạo**
+```sh
 kubectl get secret
-
-- Thực hiện upload image lên repo bằng cách sau:
-docker tag image idp.registry.vnpt.vn/image:v1
+```
+**Thực hiện upload image lên repo bằng cách sau:**
+```sh
+docker tag yourimage idp.registry.vnpt.vn/image1:v1
 docker login idp.registry.vnpt.vn
-docker push idp.registry.vnpt.vn/image:v1
+docker push idp.registry.vnpt.vn/image1:v1
+```
+***Node: Yêu cầu phải copy file `ca.crt` sang thư mục cert của host muốn up/down image.***
 
-- yêu cầu phải copy file ca.crt sang thư mục cert của host muốn up/down image.
-
-- Thực hiện tạo pod, lấy image từ repo của nexus bằng file deployment-test-registry.yaml sau:
+**Thực hiện tạo pod, lấy image từ repo của nexus bằng file `deployment-test-registry.yaml` sau:**
 ```sh
 cat << EOF > deployment-test-registry.yaml
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
@@ -223,8 +228,11 @@ spec:
         - name: nexus-secret-registry
 EOF
 ```
-- Chạy lệnh:
+**Chạy lệnh:**
+```sh
 kubectl apply -f deployment-test-registry.yaml
-
-- Check pod vừa tạo:
+```
+**Check pod vừa tạo:**
+```sh
 kubectl get pods -o wide
+```
