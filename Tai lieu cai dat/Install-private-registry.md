@@ -1,5 +1,7 @@
 # Install Private Registry
 
+## 1. Thực hiện trên Node Registry
+
 **Tạo ssl certificate cho nginx. Chúng ta sẽ sử dụng nginx để làm proxy webserver cho registry. Do registry sử dụng port khác với 80/443 để cung cấp dịch vụ.**
 ```sh
 mkdir -p /data/nginx/certs
@@ -45,7 +47,7 @@ An optional company name []:VNPT-IT
 ```sh
 openssl x509 -req -days 3650 -in idp.registry.vnpt.vn.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out idp.registry.vnpt.vn.crt
 ```
-**Tạo file /data/nginx/nginx.conf để sử dụng cho container nginx với nội dung sau**
+**Tạo file `/data/nginx/nginx.conf` để sử dụng cho container nginx với nội dung sau**
 ```sh
 cd
 cat << EOF > /data/nginx/nginx.conf
@@ -107,7 +109,7 @@ EOF
 ```
 ## 2.Cài đặt docker, docker-compose để chạy nginx và nexus
 
-**Thực hiện cài docker-ce:**
+**Thực hiện cài `docker-ce`:**
 ```sh
 apt install apt-transport-https ca-certificates curl software-properties-common -y
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -115,12 +117,12 @@ add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bi
 apt update
 apt install docker-ce -y
 ```
-**Thực hiện cài đặt docker-compose bằng các lệnh:**
+**Thực hiện cài đặt `docker-compose` bằng các lệnh:**
 ```sh
 curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 ```
-**Tạo file docker-compose.yaml với nội dung sau:**
+**Tạo file `docker-compose.yaml` với nội dung sau:**
 ```sh
 cd && mkdir -p nexus3 && cd nexus3
 cat << EOF > docker-compose.yaml
@@ -169,14 +171,14 @@ Thực hiện tạo repository bằng cách vào icon bánh răng (cạnh ô sea
 ```sh
 mkdir -p /etc/docker/certs.d/idp.registry.vnpt.vn
 ```
-**Copy file ca.crt từ node registry vào thư mục /etc/docker/certs.d/idp.registry.vnpt.vn trên tất cả các máy master và worker**
+**Copy file `ca.crt` từ node registry vào thư mục `/etc/docker/certs.d/idp.registry.vnpt.vn` trên tất cả các máy master và worker**
 
 ```sh
-scp /data/nginx/certs/ca.crt vnpt@10.1.38.111:/tmp
-scp /data/nginx/certs/ca.crt vnpt@10.1.38.128:/tmp
-scp /data/nginx/certs/ca.crt vnpt@10.1.38.149:/tmp
-scp /data/nginx/certs/ca.crt vnpt@10.1.38.137:/tmp
-scp /data/nginx/certs/ca.crt vnpt@10.1.38.138:/tmp
+scp /data/nginx/certs/ca.crt user@10.1.38.111:/tmp
+scp /data/nginx/certs/ca.crt user@10.1.38.128:/tmp
+scp /data/nginx/certs/ca.crt user@10.1.38.149:/tmp
+scp /data/nginx/certs/ca.crt user@10.1.38.137:/tmp
+scp /data/nginx/certs/ca.crt user@10.1.38.138:/tmp
 ```
 **Trên các node master, worker thực hiện sao chép `ca.crt` vào trong docker**
 ```sh
@@ -184,7 +186,7 @@ $ cp /tmp/ca.crt /etc/docker/certs.d/idp.registry.vnpt.vn/
 ```
 **Thực hiện tạo secret để kết nối vào repository:**
 ```sh
-kubectl create secret docker-registry nexus-secret-registry --docker-server=idp.registry.vnpt.vn --docker-username=admin --docker-password=your@password
+kubectl create secret docker-registry nexus-secret-registry --docker-server=idp.registry.vnpt.vn --docker-username=admin --docker-password=pass@registry
 ```
 **Check secret vừa tạo**
 ```sh
