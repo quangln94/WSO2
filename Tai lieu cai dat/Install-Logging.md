@@ -43,9 +43,10 @@ apt install kibana
 systemctl enable kibana
 systemctl start kibana
 ```
+```sh
 echo "admin:`openssl passwd -apr1`" | sudo tee -a /etc/nginx/htpasswd.users
 ==> IdpSI@!2019
-
+```
 **Cấu hình nginx:**
 ```sh
 vim /etc/nginx/sites-available/idp.vnpt.vn
