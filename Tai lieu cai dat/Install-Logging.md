@@ -1,4 +1,4 @@
-Cài đặt Logging
+# Install Logging
 
 **Cài đặt Java**
 ```sh
