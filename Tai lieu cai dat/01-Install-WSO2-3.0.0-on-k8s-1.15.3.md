@@ -9,6 +9,7 @@
 |worker2|10.1.38.146|
 |mysql|10.1.38.147|
 |NFS|10.1.38.129|
+|Registry|10.1.38.42|
 
 ## 1. Thực hiện trên NFS
 ### 1.1 Tạo thư mục chia sẻ và phân quyền trên NFS
