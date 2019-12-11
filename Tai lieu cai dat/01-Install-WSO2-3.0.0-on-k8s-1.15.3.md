@@ -7,9 +7,13 @@
 |master3|10.1.38.149|
 |worker1|10.1.38.144|
 |worker2|10.1.38.146|
+|haproxy1|10.1.38.137|
+|haproxy2|10.1.38.138|
 |mysql|10.1.38.147|
 |NFS|10.1.38.129|
 |Registry|10.1.38.42|
+|Logging|10.1.38.139|
+
 
 ## 1. Thực hiện trên NFS
 ### 1.1 Tạo thư mục chia sẻ và phân quyền trên NFS
