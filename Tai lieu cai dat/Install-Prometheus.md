@@ -1,8 +1,8 @@
 # Install Prometheus using Helm
 
-## Thực hiện cài Prometheus trên cụm kubernetes
 ***Sử dụng helm để cài đặt prometheus + grafana giám sát cho cụm kubernetes:***
 
+## Thực hiện cài Prometheus trên cụm kubernetes
 ## 1.Cài đặt Helm
 
 **Thực hiện trên Node Master**
