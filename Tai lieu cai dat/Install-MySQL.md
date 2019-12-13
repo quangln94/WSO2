@@ -3,6 +3,7 @@
 ```sh
 sudo apt-get update
 sudo apt-get install mysql-server
+systemctl restart mysqld
 mysql_secure_installation
 ```
 ## 2. Câu hình Master-Master
