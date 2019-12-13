@@ -64,10 +64,10 @@ mysql> SHOW MASTER STATUS;
 ```
 ***Note lại `File` và `Position` để dùng cho Node 2***
 
-**Thực hiện tiếp lệnh sau:
+**Thực hiện tiếp lệnh sau:**
 ```sh
 mysql> STOP SLAVE;
-mysql> CHANGE MASTER TO MASTER_HOST = '172.16.68.102', MASTER_USER = 'replicas', MASTER_PASSWORD = '12345aA@', MASTER_LOG_FILE = 'mysql-bin.000002', MASTER_LOG_POS = 449;
+mysql> CHANGE MASTER TO MASTER_HOST = '10.1.38.148', MASTER_USER = 'replicas', MASTER_PASSWORD = '12345aA@', MASTER_LOG_FILE = 'mysql-bin.000002', MASTER_LOG_POS = 449;
 mysql> START SLAVE;
 ```
 Trong đó:
@@ -83,7 +83,7 @@ systemctl reboot
 Thêm vào file `/etc/mysql/mysql.conf.d/mysqld.cnf` nội dung sau: 
 ```sh
 $ vim /etc/mysql/mysql.conf.d/mysqld.cnf
-bind-address            = 10.1.38.147
+bind-address            = 10.1.38.148
 server-id=2
 log-bin="mysql-bin"
 relay-log="mysql-relay-log"
@@ -114,7 +114,7 @@ mysql> SHOW MASTER STATUS;
 **Thực hiện tiếp lệnh sau:
 ```sh
 mysql> STOP SLAVE;
-mysql> CHANGE MASTER TO MASTER_HOST = '172.16.68.101', MASTER_USER = 'replicas', MASTER_PASSWORD = '12345aA@', MASTER_LOG_FILE = 'mysql-bin.000002', MASTER_LOG_POS = 443;
+mysql> CHANGE MASTER TO MASTER_HOST = '10.1.38.147', MASTER_USER = 'replicas', MASTER_PASSWORD = '12345aA@', MASTER_LOG_FILE = 'mysql-bin.000002', MASTER_LOG_POS = 443;
 mysql> START SLAVE;
 ```
 Trong đó:
