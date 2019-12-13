@@ -79,10 +79,11 @@ Sau khi thực hiện xong, reboot lại Node 1
 systemctl reboot
 ```
 
-### 2.2 Cài đặt và cấu hình MySQL Master Master Replication trên Node 2 - 172.16.68.102
-Thêm vào file `/etc/my.cnf` nội dung sau: 
+### 2.2 Cài đặt và cấu hình MySQL Master Master Replication trên Node 2 - 10.1.38.148
+Thêm vào file `/etc/mysql/mysql.conf.d/mysqld.cnf` nội dung sau: 
 ```sh
-$ vim /etc/my.cnf
+$ vim /etc/mysql/mysql.conf.d/mysqld.cnf
+bind-address            = 10.1.38.147
 server-id=2
 log-bin="mysql-bin"
 relay-log="mysql-relay-log"
