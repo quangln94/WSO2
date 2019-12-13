@@ -20,7 +20,7 @@ mysqldump -u root -pmypass --all-databases > alldatabases.sql
 ```
 **Unlock database để có thể đọc và ghi vào database bằng câu lệnh sau**
 ```sh
-mysql> unlock tables;
+mysql> SET GLOBAL read_only = OFF;
 ```
 **Copy file `alldatabases.sql` từ Node 1 sang Node 2**
 ```sh
@@ -32,9 +32,7 @@ scp alldatabases.sql root@10.1.38.148:~
 ```sh
 mysql -u username -pmypass < alldatabases.sql
 ```
-## 2. Cấu hình MySQL Master-Master
-
-### 2.1 Cài đặt và cấu hình MySQL Master Master Replication trên Node 1 - 10.1.38.147
+### 2.3 Cấu hình MySQL Master Master Replication trên Node 1 - 10.1.38.147
 Thêm vào file `/etc/mysql/mysql.conf.d/mysqld.cnf` nội dung sau: 
 ```sh
 $ vim /etc/mysql/mysql.conf.d/mysqld.cnf
