@@ -58,6 +58,11 @@ virtual_ipaddress {
 }
 EOF
 ```
+Trong đó:
+- `priority 100`: Giá trị này khác nhau trên mỗi Server, gí trị cao hơn đóng vài trò là Master.
+- `10.1.38.150/24`: Cấu hình IP VIP 
+
+
 **Setup Haproxy**
 ```sh
 cat > /etc/haproxy/haproxy.cfg <<EOF
